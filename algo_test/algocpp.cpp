@@ -18,7 +18,7 @@ using namespace std;
 #define PLACE_THRESHOLD 5
 #define TIME_DESTINATION_THRESHOLD 3
 
-#define FILE_NAME "location-1.txt"
+#define FILE_NAME "location-2.txt"
 // #define FILE_NAME "location-2.txt"
 
 vector<Location> locationList;
@@ -40,7 +40,7 @@ void clustering(vector<Location> &locationList, vector<Cluster> &clusterList) {
 		}
 		Location temp = locationList[i];
 		locationStatus[i] = 1;
-
+		locationList[i].parent_cluster_id = cluster_id_counter;
 		Cluster cluster = Cluster(&locationList[i]);
 		queue<Location> QLocation;
 		QLocation.push(temp);
@@ -131,14 +131,6 @@ void classifyCluster(vector<Cluster> &clusterList) {
 }
 
 void generateDestinationRef(vector<Location> &locationList) {
-	/*for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
-		for ( unsigned int j = 0; j < clusterList[i].locationList.size(); j++ ) {
-		Location* temp = clusterList[i].locationList[j];
-		if ( (*temp).id != locationList.size() - 1 ) {
-		(*temp).destination_id = locationList[(*temp).id + 1].parentCluster_id;
-		}
-		}
-		}*/
 	for ( unsigned int i = 0; i < locationList.size() - 1; i++ ) {
 		if ( abs(locationList[i].time - locationList[i + 1].time) <= TIME_DESTINATION_THRESHOLD )
 			locationList[i].destination_cluster_id = locationList[i + 1].parent_cluster_id;
@@ -147,7 +139,16 @@ void generateDestinationRef(vector<Location> &locationList) {
 
 void printDestination(vector<Cluster> clusterList) {
 	for ( unsigned int i = 0; i < locationList.size(); i++ ) {
-		cout << "location " << i << ": " << locationList[i].destination_cluster_id << "\n";
+		cout << "location " << i << ": " << locationList[i].parent_cluster_id << "   \t->\t" << locationList[i].destination_cluster_id;
+		if ( locationList[i].destination_cluster_id == UNKNOWN - 1 )
+			cout << "\t  ";
+		else if ( clusterList[locationList[i].parent_cluster_id].type == PLACE )
+			cout << "\tp   ";
+		else
+			cout << "\tr ";
+		if ( locationList[i].destination_cluster_id != -1 && locationList[i].parent_cluster_id != locationList[i].destination_cluster_id )
+			cout << "x";
+		cout << "\n";
 	}
 }
 
