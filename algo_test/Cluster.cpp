@@ -3,7 +3,7 @@
 
 Cluster::Cluster() {
 }
-Cluster::Cluster(Location initLocation) {
+Cluster::Cluster(Location *initLocation) {
 	locationList.push_back(initLocation);
 }
 

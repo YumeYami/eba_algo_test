@@ -10,11 +10,12 @@ using namespace std;
 
 class Cluster {
 public:
-	vector<Location> locationList;
+	vector<Location*> locationList;
 	int type = UNKNOWN;
+	int cluster_id = -1;
 
 	Cluster();
-	Cluster(Location initLocation);
+	Cluster(Location *initLocation);
 	~Cluster();
 };
 

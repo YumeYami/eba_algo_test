@@ -14,17 +14,23 @@ using namespace std;
 
 #define K_TIME 0.0004
 #define DIST_THRESHOLD 0.0025
-#define FILE_NAME "location-2.txt"
 #define PI 3.141592653589793238462643383279502884
-#define PLACE_THRESHOLD 0.8413
+#define PLACE_THRESHOLD 5
+#define TIME_DESTINATION_THRESHOLD 3
 
-vector<Location> personList;
+#define FILE_NAME "location-1.txt"
+// #define FILE_NAME "location-2.txt"
+
+vector<Location> locationList;
 vector<Cluster> clusterList;
 double average = 0;
 double variance = 0;
+double placeThreshold = 0;
 
+int location_id_counter = 0;
+int cluster_id_counter = 0;
 
-void clustering(vector<Location> locationList, vector<Cluster> &clusterList) {
+void clustering(vector<Location> &locationList, vector<Cluster> &clusterList) {
 	if ( locationList.empty() ) return;
 	vector<int> locationStatus;
 	locationStatus.resize(locationList.size(), 0);
@@ -35,7 +41,7 @@ void clustering(vector<Location> locationList, vector<Cluster> &clusterList) {
 		Location temp = locationList[i];
 		locationStatus[i] = 1;
 
-		Cluster cluster = Cluster(locationList[i]);
+		Cluster cluster = Cluster(&locationList[i]);
 		queue<Location> QLocation;
 		QLocation.push(temp);
 		while ( !QLocation.empty() ) {
@@ -63,10 +69,12 @@ void clustering(vector<Location> locationList, vector<Cluster> &clusterList) {
 				if ( dist < DIST_THRESHOLD ) {
 					QLocation.push(locationList[j]);
 					locationStatus[j] = 1;
-					cluster.locationList.push_back(locationList[j]);
+					locationList[j].parent_cluster_id = cluster_id_counter;
+					cluster.locationList.push_back(&locationList[j]);
 				}
 			}
 		}
+		cluster.cluster_id = cluster_id_counter++;
 		clusterList.push_back(cluster);
 	}
 }
@@ -76,13 +84,13 @@ void printCluster(vector<Cluster> clusterList) {
 	for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
 		cout << "cluster" << i << ": ";
 		for ( unsigned int j = 0; j < clusterList[i].locationList.size(); j++ ) {
-			cout << clusterList[i].locationList[j].id << " ";
+			cout << (*clusterList[i].locationList[j]).id << " ";
 		}
 		cout << "\n";
 	}
 }
 
-void calCluster(vector<Cluster> clusterList) {
+void calClusterDistribute(vector<Cluster> clusterList) {
 	average = 0;
 	for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
 		average += clusterList[i].locationList.size();
@@ -95,19 +103,21 @@ void calCluster(vector<Cluster> clusterList) {
 		variance += diff*diff;
 	}
 	variance /= clusterList.size();
-	cout << "average: " << average << "\tvariance: " << variance<<"\n";
+	cout << "average: " << average << "\tvariance: " << variance << "\n";
+	//placeThreshold = average + sqrt(variance)/2;
+	placeThreshold = PLACE_THRESHOLD;
 }
 
 void classifyCluster(vector<Cluster> &clusterList) {
 	for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
 		double n = clusterList[i].locationList.size();
-		cout << "n: " << n << "\n";
-		double fn = 1.0 * exp(-((n - average)*(n - average) / 2.0 / variance)) / sqrt(2.0 * PI * variance);
-		if ( fn > PLACE_THRESHOLD )
+		//cout << "n: " << n << "\n";
+		//double fn = 1.0 * exp(-((n - average)*(n - average) / 2.0 / variance)) / sqrt(2.0 * PI * variance);
+		if ( n > placeThreshold )
 			clusterList[i].type = PLACE;
 		else
 			clusterList[i].type = ROUTE;
-		cout << "fn " << i << ": " << fn << "\n";
+		//cout << "fn " << i << ": " << fn << "\n";
 	}
 	for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
 		cout << "cluster " << i << ": ";
@@ -120,11 +130,32 @@ void classifyCluster(vector<Cluster> &clusterList) {
 	}
 }
 
+void generateDestinationRef(vector<Location> &locationList) {
+	/*for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
+		for ( unsigned int j = 0; j < clusterList[i].locationList.size(); j++ ) {
+		Location* temp = clusterList[i].locationList[j];
+		if ( (*temp).id != locationList.size() - 1 ) {
+		(*temp).destination_id = locationList[(*temp).id + 1].parentCluster_id;
+		}
+		}
+		}*/
+	for ( unsigned int i = 0; i < locationList.size() - 1; i++ ) {
+		if ( abs(locationList[i].time - locationList[i + 1].time) <= TIME_DESTINATION_THRESHOLD )
+			locationList[i].destination_cluster_id = locationList[i + 1].parent_cluster_id;
+	}
+}
+
+void printDestination(vector<Cluster> clusterList) {
+	for ( unsigned int i = 0; i < locationList.size(); i++ ) {
+		cout << "location " << i << ": " << locationList[i].destination_cluster_id << "\n";
+	}
+}
+
 int main() {
 	fstream fileLocation;
 	fileLocation.open(FILE_NAME);
 	string temp;
-	int locationID = 0;
+
 
 
 	while ( !fileLocation.eof() ) {
@@ -135,16 +166,17 @@ int main() {
 		ss >> lat;
 		ss >> lon;
 
-		int id = locationID++;
-		personList.push_back(Location(lat, lon, time, id));
+		int id = location_id_counter++;
+		locationList.push_back(Location(lat, lon, time, id));
 	}
-	for ( unsigned int i = 0; i < personList.size(); i++ ) {
-		Location x = personList[i];
+	for ( unsigned int i = 0; i < locationList.size(); i++ ) {
+		Location x = locationList[i];
 		cout << x.id << ":\t" << x.time << "\t" << x.lat << "\t" << x.lon << "\n";
 	}
-	clustering(personList, clusterList);
+	clustering(locationList, clusterList);
 	printCluster(clusterList);
-	calCluster(clusterList);
+	calClusterDistribute(clusterList);
 	classifyCluster(clusterList);
-
+	generateDestinationRef(locationList);
+	printDestination(clusterList);
 }
