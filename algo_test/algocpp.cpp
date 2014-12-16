@@ -22,9 +22,10 @@ using namespace std;
 #define VARIANCE_TIME 4.0
 
 //#define FILE_NAME "location-2.txt"
-#define FILE_TRAIN "location-3-train.txt"
-#define FILE_TEST "location-3-test.txt"
-#define OUTPUT_FILE_NAME "out-location-3.txt"
+string file_num = "3";
+string FILE_TRAIN = "location-" + file_num + "-train.txt";
+string FILE_TEST = "location-" + file_num + "-test.txt";
+string OUTPUT_FILE_NAME = "out-location-" + file_num + ".txt";
 // #define FILE_NAME "location-2.txt"
 
 int location_id_counter = 0;
@@ -136,7 +137,7 @@ void calClusterDistribution(vector<Cluster> clusterList, double & average, doubl
 	}
 	variance /= clusterList.size();
 	variance /= clusterList.size();
-	out << "average: " << average << "\tvariance: " << variance << "\n";
+	//out << "average: " << average << "\tvariance: " << variance << "\n";
 	//placeThreshold = average + sqrt(variance)/2;
 	placeThreshold = PLACE_THRESHOLD_SIZE;
 }
@@ -166,16 +167,16 @@ void classifyCluster(vector<Cluster> &clusterList, double placeThreshold) {
 			clusterList[i].type = ROUTE;
 		//out << "fn " << i << ": " << fn << "\n";
 	}
-	for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
+	//for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
 
-		if ( clusterList[i].type == PLACE ) {
-			out << "cluster " << i << ": ";
-			out << "PLACE\n";
-		}
-		else {
-			//out << "ROUTE\n";
-		}
-	}
+	//	if ( clusterList[i].type == PLACE ) {
+	//		out << "cluster " << i << ": ";
+	//		out << "PLACE\n";
+	//	}
+	//	else {
+	//		//out << "ROUTE\n";
+	//	}
+	//}
 }
 
 void generateDestinationRef(vector<Location> &locationList) {
@@ -230,27 +231,6 @@ int predictNextLocation(Location currentLocation, vector<Cluster> clusterList, v
 	}
 	return clusterID;
 }
-//
-//void addSingleLocation(Location newLocation, vector<Location> &location_list, vector<Cluster> &cluster_list) {
-//	for ( unsigned int i = 0; i < location_list.size(); i++ ) {
-//		if ( isInCluster(newLocation, location_list[i]) ) {
-//			int clusterNum = location_list[i].parent_cluster_id;
-//			int clusterSize = cluster_list[clusterNum].location_list.size();
-//			newLocation.parent_cluster_id = clusterNum;
-//			cluster_list[clusterNum].lat = (cluster_list[clusterNum].lat * clusterSize + newLocation.lat) / (clusterSize + 1);
-//			cluster_list[clusterNum].lng = (cluster_list[clusterNum].lng * clusterSize + newLocation.lng) / (clusterSize + 1);
-//			location_list.push_back(newLocation);
-//			cluster_list[clusterNum].location_list.push_back(&location_list[location_list.size() - 1]);
-//			break;
-//		}
-//	}
-//}
-//
-//void addLocationList(vector<Location> newLocationList, vector<Location> &location_list, vector<Cluster> &cluster_list) {
-//	for ( unsigned int i = 0; i < newLocationList.size(); i++ ) {
-//
-//	}
-//}
 
 void reExecute(vector<Location> & location_list, vector<Cluster> & cluster_list, double & average, double & variance, double & place_threshold) {
 	clustering(location_list, cluster_list);
@@ -271,8 +251,9 @@ void reExecuteWithPrint(vector<Location> & location_list, vector<Cluster> & clus
 	out << "\n-\n";
 }
 
-int addTestList(vector<Location> & location_list, vector<Cluster> & cluster_list, double & average, double & variance, double & place_threshold, Location predicted_location, vector<Location> test_location_list) {
+int addTestList(vector<Location> & location_list, vector<Cluster> & cluster_list, double & average, double & variance, double & place_threshold, Location & predicted_location, vector<Location> test_location_list) {
 	int count_correct = 0;
+	int cannot_predicted = 0;
 	for ( unsigned int i = 0; i < test_location_list.size() - 1; i++ ) {
 		location_list.push_back(test_location_list[i]);
 		reExecute(location_list, cluster_list, average, variance, place_threshold);
@@ -280,8 +261,23 @@ int addTestList(vector<Location> & location_list, vector<Cluster> & cluster_list
 		if ( predicted_location.parent_cluster_id == location_list[location_list.size() - 1].parent_cluster_id ) {
 			count_correct++;
 		}
-		cout << "test number " << i << "from" << test_location_list.size() << "\n";
+		else if ( predicted_location.parent_cluster_id == -1 ) {
+			cannot_predicted++;
+		}
+
+		int predicted_next_cluster_id = predictNextLocation(location_list[location_list.size() - 1], cluster_list, location_list);
+
+		if ( predicted_next_cluster_id == -1 )
+			predicted_location = Location(0, 0, 0, -1);
+		else
+			predicted_location = Location(cluster_list[predicted_next_cluster_id].lat, cluster_list[predicted_next_cluster_id].lng, location_list[location_list.size() - 1].time + 1, location_id_counter++);
+		predicted_location.parent_cluster_id = predicted_next_cluster_id;
+		cout << "test number " << i + 1 << "from" << test_location_list.size() << "\n";
 	}
+	location_list.push_back(test_location_list[test_location_list.size() - 1]);
+	reExecute(location_list, cluster_list, average, variance, place_threshold);
+	out << "\ncannot predicted: " << cannot_predicted << "/" << test_location_list.size() << "\n";
+	out << "accuracy: " << 100.0*count_correct / (test_location_list.size() - cannot_predicted) << "\n";
 	return count_correct;
 }
 
@@ -327,7 +323,7 @@ int main() {
 	fileTest.open(FILE_TEST);
 	vector<Location> test_location_list;
 	ReadFileLocation(fileTest, test_location_list);
-	countCorrect = addTestList(location_list, cluster_list, average, variance, place_threshold, predicted_location, test_location_list);
-	out << "accuracy: " << 100.0*countCorrect / test_location_list.size() << "\n";
+	addTestList(location_list, cluster_list, average, variance, place_threshold, predicted_location, test_location_list);
+
 	out.close();
 }

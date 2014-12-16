@@ -58,7 +58,7 @@ cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 4
+predicted cluster: 4 	 new location cluster: 4
 average: 7.71429	variance: 14.7959
 cluster 3: PLACE
 cluster 4: PLACE
@@ -70,7 +70,7 @@ cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 8	variance: 17.5102
 cluster 3: PLACE
 cluster 4: PLACE
@@ -118,13 +118,13 @@ cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 9.14286	variance: 22.3061
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 8.125	variance: 17.9219
 cluster 3: PLACE
 cluster 4: PLACE
@@ -136,49 +136,49 @@ cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 8
+predicted cluster: 4 	 new location cluster: 8
 average: 6.7	variance: 12.25
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 9
+predicted cluster: 4 	 new location cluster: 9
 average: 6.8	variance: 12.16
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 9
+predicted cluster: 4 	 new location cluster: 9
 average: 6.27273	variance: 10.2562
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 9 	 new location cluster: 10
+predicted cluster: 4 	 new location cluster: 10
 average: 5.83333	variance: 8.81944
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 11
+predicted cluster: 4 	 new location cluster: 11
 average: 5.91667	variance: 9.11806
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 6	variance: 10.0417
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 6.08333	variance: 9.72917
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 4
+predicted cluster: 4 	 new location cluster: 4
 average: 6.16667	variance: 10.0972
 cluster 3: PLACE
 cluster 4: PLACE
@@ -202,19 +202,19 @@ cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 6.5	variance: 11.4306
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 6.58333	variance: 11.8125
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 6 	 new location cluster: 4
+predicted cluster: 4 	 new location cluster: 4
 average: 6.66667	variance: 12.2083
 cluster 3: PLACE
 cluster 4: PLACE
@@ -238,13 +238,13 @@ cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 7	variance: 14.5139
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 7.08333	variance: 14.1181
 cluster 3: PLACE
 cluster 4: PLACE
@@ -274,13 +274,13 @@ cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 7.5	variance: 16.2361
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 7.58333	variance: 16.6597
 cluster 3: PLACE
 cluster 4: PLACE
@@ -304,18 +304,11 @@ cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
+predicted cluster: 4 	 new location cluster: 3
 average: 7.91667	variance: 18.5347
 cluster 3: PLACE
 cluster 4: PLACE
 
 -
-predicted cluster: 3 	 new location cluster: 3
-average: 8	variance: 19.9306
-cluster 3: PLACE
-cluster 4: PLACE
-
--
-
-cannot predicted: 5/48
-accuracy: 62.7907
+predicted cluster: 4 	 new location cluster: 3
+accuracy: 37.5

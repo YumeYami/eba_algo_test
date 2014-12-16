@@ -239,107 +239,107 @@ average: 69	variance: 3082.67
 cluster 0: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 2
+predicted cluster: 0 	 new location cluster: 2
 average: 69.3333	variance: 3037.56
 cluster 0: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 2
+predicted cluster: 0 	 new location cluster: 2
 average: 52.25	variance: 1925.38
 cluster 0: PLACE
 
 -
-predicted cluster: 2 	 new location cluster: 3
+predicted cluster: 0 	 new location cluster: 3
 average: 42	variance: 1328.48
 cluster 0: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 4
+predicted cluster: 0 	 new location cluster: 4
 average: 35.1667	variance: 952.056
 cluster 0: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 5
+predicted cluster: 0 	 new location cluster: 5
 average: 35.3333	variance: 950.194
 cluster 0: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 5
+predicted cluster: 0 	 new location cluster: 5
 average: 35.5	variance: 948.389
 cluster 0: PLACE
 
 -
-predicted cluster: 5 	 new location cluster: 5
+predicted cluster: 0 	 new location cluster: 5
 average: 35.6667	variance: 946.639
 cluster 0: PLACE
 
 -
-predicted cluster: 5 	 new location cluster: 5
+predicted cluster: 0 	 new location cluster: 5
 average: 35.8333	variance: 944.944
 cluster 0: PLACE
 
 -
-predicted cluster: 5 	 new location cluster: 5
+predicted cluster: 0 	 new location cluster: 5
 average: 36	variance: 952.556
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 5 	 new location cluster: 5
+predicted cluster: 0 	 new location cluster: 5
 average: 36.1667	variance: 941.556
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 5 	 new location cluster: 5
+predicted cluster: 0 	 new location cluster: 5
 average: 36.3333	variance: 939.972
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 5 	 new location cluster: 5
+predicted cluster: 0 	 new location cluster: 5
 average: 31.2857	variance: 712.224
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 5 	 new location cluster: 6
+predicted cluster: 0 	 new location cluster: 6
 average: 31.4286	variance: 711.306
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 5
+predicted cluster: 0 	 new location cluster: 5
 average: 27.625	variance: 557.156
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 5 	 new location cluster: 7
+predicted cluster: 0 	 new location cluster: 7
 average: 24.6667	variance: 447.938
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 8
+predicted cluster: 0 	 new location cluster: 8
 average: 22.3	variance: 367.8
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 9
+predicted cluster: 0 	 new location cluster: 9
 average: 20.3636	variance: 307.347
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 10
+predicted cluster: 0 	 new location cluster: 10
 average: 20.4545	variance: 310.397
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 0
+predicted cluster: 0 	 new location cluster: 0
 average: 20.5455	variance: 313.463
 cluster 0: PLACE
 cluster 5: PLACE
@@ -483,19 +483,19 @@ cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 12
+predicted cluster: 0 	 new location cluster: 12
 average: 19.2308	variance: 277.266
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 12
+predicted cluster: 0 	 new location cluster: 12
 average: 19.3077	variance: 277.059
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 12 	 new location cluster: 10
+predicted cluster: 0 	 new location cluster: 10
 average: 19.3846	variance: 279.527
 cluster 0: PLACE
 cluster 5: PLACE
@@ -705,19 +705,19 @@ cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 13
+predicted cluster: 0 	 new location cluster: 13
 average: 20.5	variance: 315.663
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 13 	 new location cluster: 13
+predicted cluster: 0 	 new location cluster: 13
 average: 20.5714	variance: 318.117
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 13 	 new location cluster: 0
+predicted cluster: 0 	 new location cluster: 0
 average: 20.6429	variance: 320.582
 cluster 0: PLACE
 cluster 5: PLACE
@@ -747,94 +747,94 @@ cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 15
+predicted cluster: 0 	 new location cluster: 15
 average: 18.375	variance: 249.707
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 15
+predicted cluster: 0 	 new location cluster: 15
 average: 17.3529	variance: 222.17
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 15 	 new location cluster: 16
+predicted cluster: 0 	 new location cluster: 16
 average: 16.4444	variance: 198.948
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 17
+predicted cluster: 0 	 new location cluster: 17
 average: 15.6316	variance: 179.188
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 18
+predicted cluster: 0 	 new location cluster: 18
 average: 15.6842	variance: 179.114
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 18
+predicted cluster: 0 	 new location cluster: 18
 average: 15.7368	variance: 179.044
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 18 	 new location cluster: 18
+predicted cluster: 0 	 new location cluster: 18
 average: 15	variance: 163.32
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 18 	 new location cluster: 19
+predicted cluster: 0 	 new location cluster: 19
 average: 15.05	variance: 162.01
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 19
+predicted cluster: 0 	 new location cluster: 19
 average: 14.381	variance: 147.376
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 19 	 new location cluster: 20
+predicted cluster: 0 	 new location cluster: 20
 average: 15.15	variance: 161.89
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 19
+predicted cluster: 0 	 new location cluster: 19
 average: 15.2	variance: 161.838
 cluster 0: PLACE
 cluster 5: PLACE
 
 -
-predicted cluster: 19 	 new location cluster: 19
+predicted cluster: 0 	 new location cluster: 19
 average: 15.25	variance: 161.79
 cluster 0: PLACE
 cluster 5: PLACE
 cluster 19: PLACE
 
 -
-predicted cluster: 19 	 new location cluster: 19
+predicted cluster: 0 	 new location cluster: 19
 average: 15.3	variance: 161.733
 cluster 0: PLACE
 cluster 5: PLACE
 cluster 19: PLACE
 
 -
-predicted cluster: 19 	 new location cluster: 18
+predicted cluster: 0 	 new location cluster: 18
 average: 15.35	variance: 161.68
 cluster 0: PLACE
 cluster 5: PLACE
 cluster 19: PLACE
 
 -
-predicted cluster: 18 	 new location cluster: 18
+predicted cluster: 0 	 new location cluster: 18
 average: 15.4	variance: 161.632
 cluster 0: PLACE
 cluster 5: PLACE
@@ -842,7 +842,7 @@ cluster 18: PLACE
 cluster 19: PLACE
 
 -
-predicted cluster: 18 	 new location cluster: 18
+predicted cluster: 0 	 new location cluster: 18
 average: 16.2632	variance: 178.388
 cluster 0: PLACE
 cluster 5: PLACE
@@ -850,7 +850,7 @@ cluster 17: PLACE
 cluster 18: PLACE
 
 -
-predicted cluster: 18 	 new location cluster: 17
+predicted cluster: 0 	 new location cluster: 17
 average: 16.3158	variance: 178.313
 cluster 0: PLACE
 cluster 5: PLACE
@@ -858,7 +858,7 @@ cluster 17: PLACE
 cluster 18: PLACE
 
 -
-predicted cluster: 17 	 new location cluster: 15
+predicted cluster: 0 	 new location cluster: 15
 average: 16.3684	variance: 178.244
 cluster 0: PLACE
 cluster 5: PLACE
@@ -866,7 +866,7 @@ cluster 17: PLACE
 cluster 18: PLACE
 
 -
-predicted cluster: 15 	 new location cluster: 15
+predicted cluster: 0 	 new location cluster: 15
 average: 16.4211	variance: 178.163
 cluster 0: PLACE
 cluster 5: PLACE
@@ -874,7 +874,7 @@ cluster 17: PLACE
 cluster 18: PLACE
 
 -
-predicted cluster: 15 	 new location cluster: 14
+predicted cluster: 0 	 new location cluster: 14
 average: 15.65	variance: 161.365
 cluster 0: PLACE
 cluster 5: PLACE
@@ -882,7 +882,7 @@ cluster 17: PLACE
 cluster 18: PLACE
 
 -
-predicted cluster: 15 	 new location cluster: 19
+predicted cluster: 0 	 new location cluster: 19
 average: 15.7	variance: 162.608
 cluster 0: PLACE
 cluster 5: PLACE
@@ -890,7 +890,7 @@ cluster 17: PLACE
 cluster 18: PLACE
 
 -
-predicted cluster: -1 	 new location cluster: 0
+predicted cluster: 0 	 new location cluster: 0
 average: 15.75	variance: 163.855
 cluster 0: PLACE
 cluster 5: PLACE
@@ -931,13 +931,4 @@ cluster 18: PLACE
 
 -
 predicted cluster: 0 	 new location cluster: 0
-average: 16	variance: 171.395
-cluster 0: PLACE
-cluster 5: PLACE
-cluster 17: PLACE
-cluster 18: PLACE
-
--
-
-cannot predicted: 21/160
-accuracy: 86.3309
+accuracy: 68.75
