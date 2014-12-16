@@ -21,8 +21,8 @@ using namespace std;
 #define VARIANCE_LNG 0.00003082
 #define VARIANCE_TIME 4.0
 
-//#define FILE_NAME "location-2.txt"
-string file_num = "3";
+string file_num = "2";
+
 string FILE_TRAIN = "location-" + file_num + "-train.txt";
 string FILE_TEST = "location-" + file_num + "-test.txt";
 string OUTPUT_FILE_NAME = "out-location-" + file_num + ".txt";
@@ -238,8 +238,9 @@ void reExecute(vector<Location> & location_list, vector<Cluster> & cluster_list,
 	calClusterLocation(cluster_list);
 	classifyCluster(cluster_list, place_threshold);
 	generateDestinationRef(location_list);
-	out << "\n-\n";
+	//out << "\n-\n";
 }
+
 void reExecuteWithPrint(vector<Location> & location_list, vector<Cluster> & cluster_list, double & average, double & variance, double & place_threshold) {
 	clustering(location_list, cluster_list);
 	printCluster(cluster_list);
@@ -247,7 +248,7 @@ void reExecuteWithPrint(vector<Location> & location_list, vector<Cluster> & clus
 	calClusterLocation(cluster_list);
 	classifyCluster(cluster_list, place_threshold);
 	generateDestinationRef(location_list);
-	printDestination(cluster_list, location_list);
+	//printDestination(cluster_list, location_list);
 	out << "\n-\n";
 }
 
@@ -257,7 +258,7 @@ int addTestList(vector<Location> & location_list, vector<Cluster> & cluster_list
 	for ( unsigned int i = 0; i < test_location_list.size() - 1; i++ ) {
 		location_list.push_back(test_location_list[i]);
 		reExecute(location_list, cluster_list, average, variance, place_threshold);
-		out << "predicted cluster: " << predicted_location.parent_cluster_id << " \t new location cluster: " << location_list[location_list.size() - 1].parent_cluster_id << "\n";
+		//out << "predicted cluster: " << predicted_location.parent_cluster_id << " \t new location cluster: " << location_list[location_list.size() - 1].parent_cluster_id << "\n";
 		if ( predicted_location.parent_cluster_id == location_list[location_list.size() - 1].parent_cluster_id ) {
 			count_correct++;
 		}
