@@ -1,0 +1,54 @@
+number of cluster: 12
+cluster0: 1- 0 
+cluster1: 1- 1 
+cluster2: 1- 2 
+cluster3: 46- 3 8 9 12 22 26 28 29 33 34 35 36 37 38 45 46 50 51 53 54 63 70 71 74 75 80 81 82 83 84 88 89 93 94 95 96 30 31 32 44 76 77 4 62 87 92 
+cluster4: 40- 5 6 7 10 11 13 14 15 16 17 18 19 20 21 24 39 40 41 42 43 47 48 52 55 56 57 58 59 60 61 72 78 85 86 90 91 25 49 73 79 
+cluster5: 1- 23 
+cluster6: 1- 27 
+cluster7: 1- 64 
+cluster8: 1- 65 
+cluster9: 2- 66 67 
+cluster10: 1- 68 
+cluster11: 1- 69 
+average: 8.08333	variance: 19.4931
+cluster 3: PLACE
+cluster 4: PLACE
+location 0: 0   	->	1
+location 1: 1   	->	2
+location 2: 2   	->	3
+location 4: 3   	->	4
+location 7: 4   	->	3
+location 9: 3   	->	4
+location 11: 4   	->	3
+location 12: 3   	->	4
+location 21: 4   	->	3
+location 22: 3   	->	5
+location 23: 5   	->	4
+location 25: 4   	->	3
+location 26: 3   	->	6
+location 27: 6   	->	3
+location 38: 3   	->	4
+location 43: 4   	->	3
+location 46: 3   	->	4
+location 49: 4   	->	3
+location 51: 3   	->	4
+location 52: 4   	->	3
+location 54: 3   	->	4
+location 61: 4   	->	3
+location 63: 3   	->	7
+location 64: 7   	->	8
+location 65: 8   	->	9
+location 67: 9   	->	10
+location 68: 10   	->	11
+location 69: 11   	->	3
+location 71: 3   	->	4
+location 73: 4   	->	3
+location 77: 3   	->	4
+location 79: 4   	->	3
+location 84: 3   	->	4
+location 86: 4   	->	3
+location 89: 3   	->	4
+location 91: 4   	->	3
+location 96: 3   	->	-1
+accuracy79/97

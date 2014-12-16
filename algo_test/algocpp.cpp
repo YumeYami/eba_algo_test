@@ -167,8 +167,9 @@ void classifyCluster(vector<Cluster> &clusterList) {
 		//out << "fn " << i << ": " << fn << "\n";
 	}
 	for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
-		out << "cluster " << i << ": ";
+		
 		if ( clusterList[i].type == PLACE ) {
+			out << "cluster " << i << ": ";
 			out << "PLACE\n";
 		}
 		else {
@@ -186,16 +187,8 @@ void generateDestinationRef(vector<Location> &locationList) {
 
 void printDestination(vector<Cluster> clusterList) {
 	for ( unsigned int i = 0; i < locationList.size(); i++ ) {
-		out << "location " << i << ": " << locationList[i].parent_cluster_id << "   \t->\t" << locationList[i].destination_cluster_id;
-		if ( locationList[i].destination_cluster_id == UNKNOWN - 1 )
-			out << "\t  ";
-		else if ( clusterList[locationList[i].parent_cluster_id].type == PLACE )
-			out << "\tp   ";
-		else
-			out << "\tr ";
-		if ( locationList[i].destination_cluster_id != -1 && locationList[i].parent_cluster_id != locationList[i].destination_cluster_id )
-			out << "x";
-		out << "\n";
+		if ( locationList[i].parent_cluster_id != locationList[i].destination_cluster_id )
+			out << "location " << i << ": " << locationList[i].parent_cluster_id << "   \t->\t" << locationList[i].destination_cluster_id << "\n";
 	}
 }
 
@@ -230,7 +223,7 @@ int predictNextLocation(Location currentLocation, vector<Cluster> clusterList, v
 	double maxScore = 0;
 	int clusterID = -1;
 	for ( unsigned int i = 0; i < scoreOfPlace.size(); i++ ) {
-		out << "score cluster " << i << ": " << scoreOfPlace[i] << "\n";
+		//out << "score cluster " << i << ": " << scoreOfPlace[i] << "\n";
 		if ( scoreOfPlace[i] > maxScore ) {
 			maxScore = scoreOfPlace[i];
 			clusterID = i;
@@ -272,13 +265,20 @@ int main() {
 	classifyCluster(clusterList);
 	generateDestinationRef(locationList);
 	printDestination(clusterList);
-	
+
 
 	/// prediction part
-	int locationTest = 2151;
-	//int locationTest = locationList.size() - 1;
-	int dest_cluster_id = predictNextLocation(locationList[locationTest], clusterList, locationList);
-	cout << "destination cluster id: " << dest_cluster_id << "\n";
+	int testNum = 54;
+	int countCorrect = 0;
+	for ( unsigned int i = 0; i < locationList.size()-1; i++ ) {
+		Location test = locationList[i];
+		int predicted_cluster_id = predictNextLocation(test, clusterList, locationList);
+		if ( predicted_cluster_id == locationList[i].destination_cluster_id ) {
+			countCorrect++;
+		}
+		cout << "destination cluster id: " << predicted_cluster_id << "\n";
+	}
+	out<<"accuracy" << countCorrect<<"/"<<locationList.size()<<"\n";
 	//update new location (individual)
 	// 	Location newLocation = Location(35.0, 140.0, 12.30, location_id_counter++);
 	// 	addSingleLocation(newLocation, locationList, clusterList);
