@@ -14,7 +14,7 @@ public:
 	int type = UNKNOWN;
 	int cluster_id = -1;
 	double lat;
-	double lon;
+	double lng;
 
 	Cluster();
 	Cluster(Location *initLocation);

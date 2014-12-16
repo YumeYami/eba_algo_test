@@ -6,7 +6,7 @@ Location::Location() {
 
 Location::Location(double lat, double lon, double time, int id) {
 	this->lat = lat;
-	this->lon = lon;
+	this->lng = lon;
 	this->time = time;
 	this->id = id;
 }

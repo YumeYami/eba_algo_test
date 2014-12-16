@@ -10,7 +10,7 @@ public:
 
 
 	double lat;
-	double lon;
+	double lng;
 	double time;
 	int id;
 	int person_id;
