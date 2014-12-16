@@ -308,4 +308,4 @@ location 3093: 79   	->	0
 location 3149: 0   	->	79
 location 3151: 79   	->	0
 location 3230: 0   	->	-1
-accuracy3158/3231
+accuracy0.977406

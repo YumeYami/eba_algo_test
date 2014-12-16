@@ -21,13 +21,16 @@ using namespace std;
 #define VARIANCE_LNG 0.00003082
 #define VARIANCE_TIME 4.0
 
-#define FILE_NAME "location-3.txt"
-#define OUTPUT_FILE_NAME "out-location-3.txt"
+//#define FILE_NAME "location-2.txt"
+#define FILE_TRAIN "location-1-train.txt"
+#define FILE_TEST "location-1-test.txt"
+#define OUTPUT_FILE_NAME "out-location-1.txt"
 // #define FILE_NAME "location-2.txt"
 
 vector<Location> locationList;
 vector<Cluster> clusterList;
 vector<Location> predictedLocationList;
+Location predicted_location;
 double average = 0;
 double variance = 0;
 double placeThreshold = 0;
@@ -36,6 +39,7 @@ int location_id_counter = 0;
 int cluster_id_counter = 0;
 
 fstream fileLocation;
+fstream fileTest;
 ofstream out(OUTPUT_FILE_NAME);
 
 void ReadFileLocation(fstream &fileLocation, vector<Location> &locationList) {
@@ -167,7 +171,7 @@ void classifyCluster(vector<Cluster> &clusterList) {
 		//out << "fn " << i << ": " << fn << "\n";
 	}
 	for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
-		
+
 		if ( clusterList[i].type == PLACE ) {
 			out << "cluster " << i << ": ";
 			out << "PLACE\n";
@@ -253,9 +257,15 @@ void addLocationList(vector<Location> newLocationList, vector<Location> &locatio
 	}
 }
 
+int addTestList(Location testLocation, vector<Location> &locationList) {
+	
+	return 0;
+}
+
 int main() {
 
-	fileLocation.open(FILE_NAME);
+	//fileLocation.open(FILE_NAME);
+	fileLocation.open(FILE_TRAIN);
 	/// import new user location
 	ReadFileLocation(fileLocation, locationList);
 	clustering(locationList, clusterList);
@@ -266,24 +276,30 @@ int main() {
 	generateDestinationRef(locationList);
 	printDestination(clusterList);
 
+	int predicted_location_id = predictNextLocation(locationList[locationList.size() - 1], clusterList, locationList);
+	predicted_location = Location(clusterList[predicted_location_id].lat, clusterList[predicted_location_id].lng, locationList[locationList.size() - 1].time + 1, location_id_counter++);
+	///// test by train
+	//int testNum = 54;
+	//int countCorrect = 0;
+	//for ( unsigned int i = 0; i < locationList.size()-1; i++ ) {
+	//	Location test = locationList[i];
+	//	int predicted_cluster_id = predictNextLocation(test, clusterList, locationList);
+	//	if ( predicted_cluster_id == locationList[i].destination_cluster_id ) {
+	//		countCorrect++;
+	//	}
+	//	//cout << "destination cluster id: " << predicted_cluster_id << "\n";
+	//}
+	//out<<"accuracy" << 1.0*countCorrect/locationList.size()<<"\n";
 
-	/// prediction part
-	int testNum = 54;
+	/// test by increasing
 	int countCorrect = 0;
-	for ( unsigned int i = 0; i < locationList.size()-1; i++ ) {
-		Location test = locationList[i];
-		int predicted_cluster_id = predictNextLocation(test, clusterList, locationList);
-		if ( predicted_cluster_id == locationList[i].destination_cluster_id ) {
-			countCorrect++;
-		}
-		cout << "destination cluster id: " << predicted_cluster_id << "\n";
+	fileTest.open(FILE_TEST);
+	vector<Location> testLocation;
+	ReadFileLocation(fileTest, testLocation);
+	for ( unsigned int i = 0; i < testLocation.size(); i++ ) {
+		countCorrect = addTestList(testLocation[i], locationList);
 	}
-	out<<"accuracy" << countCorrect<<"/"<<locationList.size()<<"\n";
-	//update new location (individual)
-	// 	Location newLocation = Location(35.0, 140.0, 12.30, location_id_counter++);
-	// 	addSingleLocation(newLocation, locationList, clusterList);
 
 
-	///add new location
 	out.close();
 }
