@@ -15,25 +15,17 @@ using namespace std;
 #define K_TIME 0.0004
 #define DIST_THRESHOLD 0.0025
 #define PI 3.141592653589793238462643383279502884
-#define PLACE_THRESHOLD 5
+#define PLACE_THRESHOLD_SIZE 5
 #define TIME_DESTINATION_THRESHOLD 24
 #define VARIANCE_LAT 0.00002017
 #define VARIANCE_LNG 0.00003082
 #define VARIANCE_TIME 4.0
 
 //#define FILE_NAME "location-2.txt"
-#define FILE_TRAIN "location-1-train.txt"
-#define FILE_TEST "location-1-test.txt"
-#define OUTPUT_FILE_NAME "out-location-1.txt"
+#define FILE_TRAIN "location-3-train.txt"
+#define FILE_TEST "location-3-test.txt"
+#define OUTPUT_FILE_NAME "out-location-3.txt"
 // #define FILE_NAME "location-2.txt"
-
-vector<Location> locationList;
-vector<Cluster> clusterList;
-vector<Location> predictedLocationList;
-Location predicted_location;
-double average = 0;
-double variance = 0;
-double placeThreshold = 0;
 
 int location_id_counter = 0;
 int cluster_id_counter = 0;
@@ -80,39 +72,43 @@ bool isInCluster(Location sLocation, Location location2) {
 	}
 }
 
-void clustering(vector<Location> &locationList, vector<Cluster> &clusterList) {
-	if ( locationList.empty() ) return;
+void clustering(vector<Location> & location_list, vector<Cluster> & cluster_list) {
+	if ( location_list.empty() ) return;
 	vector<int> locationStatus;
-	locationStatus.resize(locationList.size(), 0);
-	for ( unsigned int i = 0; i < locationList.size(); i++ ) {
+	locationStatus.resize(location_list.size(), 0);
+	vector<Cluster> newClusterList;
+	cluster_id_counter = 0;
+	location_id_counter = 0;
+	for ( unsigned int i = 0; i < location_list.size(); i++ ) {
 		if ( locationStatus[i] != 0 ) {
 			continue;
 		}
-		Location temp = locationList[i];
+		Location temp = location_list[i];
 		locationStatus[i] = 1;
-		locationList[i].parent_cluster_id = cluster_id_counter;
-		Cluster cluster = Cluster(&locationList[i]);
+		location_list[i].parent_cluster_id = cluster_id_counter;
+		Cluster cluster = Cluster(&location_list[i]);
 		queue<Location> QLocation;
 		QLocation.push(temp);
 		while ( !QLocation.empty() ) {
 			//out << "q execute\n";
 			Location sLocation = QLocation.front();
 			QLocation.pop();
-			for ( unsigned int j = 0; j < locationList.size(); j++ ) {
+			for ( unsigned int j = 0; j < location_list.size(); j++ ) {
 				if ( locationStatus[j] != 0 ) {
 					continue;
 				}
-				if ( isInCluster(sLocation, locationList[j]) ) {
-					QLocation.push(locationList[j]);
+				if ( isInCluster(sLocation, location_list[j]) ) {
+					QLocation.push(location_list[j]);
 					locationStatus[j] = 1;
-					locationList[j].parent_cluster_id = cluster_id_counter;
-					cluster.locationList.push_back(&locationList[j]);
+					location_list[j].parent_cluster_id = cluster_id_counter;
+					cluster.locationList.push_back(&location_list[j]);
 				}
 			}
 		}
 		cluster.cluster_id = cluster_id_counter++;
-		clusterList.push_back(cluster);
+		newClusterList.push_back(cluster);
 	}
+	cluster_list = newClusterList;
 }
 
 void printCluster(vector<Cluster> clusterList) {
@@ -126,7 +122,7 @@ void printCluster(vector<Cluster> clusterList) {
 	}
 }
 
-void calClusterDistribution(vector<Cluster> clusterList) {
+void calClusterDistribution(vector<Cluster> clusterList, double & average, double & variance, double & placeThreshold) {
 	average = 0;
 	for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
 		average += clusterList[i].locationList.size();
@@ -142,7 +138,7 @@ void calClusterDistribution(vector<Cluster> clusterList) {
 	variance /= clusterList.size();
 	out << "average: " << average << "\tvariance: " << variance << "\n";
 	//placeThreshold = average + sqrt(variance)/2;
-	placeThreshold = PLACE_THRESHOLD;
+	placeThreshold = PLACE_THRESHOLD_SIZE;
 }
 
 void calClusterLocation(vector<Cluster> &clusterList) {
@@ -159,7 +155,7 @@ void calClusterLocation(vector<Cluster> &clusterList) {
 	}
 }
 
-void classifyCluster(vector<Cluster> &clusterList) {
+void classifyCluster(vector<Cluster> &clusterList, double placeThreshold) {
 	for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
 		double n = clusterList[i].locationList.size();
 		//out << "n: " << n << "\n";
@@ -189,7 +185,7 @@ void generateDestinationRef(vector<Location> &locationList) {
 	}
 }
 
-void printDestination(vector<Cluster> clusterList) {
+void printDestination(vector<Cluster> clusterList, vector<Location> locationList) {
 	for ( unsigned int i = 0; i < locationList.size(); i++ ) {
 		if ( locationList[i].parent_cluster_id != locationList[i].destination_cluster_id )
 			out << "location " << i << ": " << locationList[i].parent_cluster_id << "   \t->\t" << locationList[i].destination_cluster_id << "\n";
@@ -211,7 +207,6 @@ double calDestinationScore(Location current_location, Location location) {
 	return score;
 }
 
-//not completed
 int predictNextLocation(Location currentLocation, vector<Cluster> clusterList, vector<Location> locationList) {
 	Cluster currentCluster = clusterList[currentLocation.parent_cluster_id];
 	vector<double> scoreOfPlace;
@@ -235,71 +230,104 @@ int predictNextLocation(Location currentLocation, vector<Cluster> clusterList, v
 	}
 	return clusterID;
 }
+//
+//void addSingleLocation(Location newLocation, vector<Location> &location_list, vector<Cluster> &cluster_list) {
+//	for ( unsigned int i = 0; i < location_list.size(); i++ ) {
+//		if ( isInCluster(newLocation, location_list[i]) ) {
+//			int clusterNum = location_list[i].parent_cluster_id;
+//			int clusterSize = cluster_list[clusterNum].location_list.size();
+//			newLocation.parent_cluster_id = clusterNum;
+//			cluster_list[clusterNum].lat = (cluster_list[clusterNum].lat * clusterSize + newLocation.lat) / (clusterSize + 1);
+//			cluster_list[clusterNum].lng = (cluster_list[clusterNum].lng * clusterSize + newLocation.lng) / (clusterSize + 1);
+//			location_list.push_back(newLocation);
+//			cluster_list[clusterNum].location_list.push_back(&location_list[location_list.size() - 1]);
+//			break;
+//		}
+//	}
+//}
+//
+//void addLocationList(vector<Location> newLocationList, vector<Location> &location_list, vector<Cluster> &cluster_list) {
+//	for ( unsigned int i = 0; i < newLocationList.size(); i++ ) {
+//
+//	}
+//}
 
-void addSingleLocation(Location newLocation, vector<Location> &locationList, vector<Cluster> &clusterList) {
-	for ( unsigned int i = 0; i < locationList.size(); i++ ) {
-		if ( isInCluster(newLocation, locationList[i]) ) {
-			int clusterNum = locationList[i].parent_cluster_id;
-			int clusterSize = clusterList[clusterNum].locationList.size();
-			newLocation.parent_cluster_id = clusterNum;
-			clusterList[clusterNum].lat = (clusterList[clusterNum].lat * clusterSize + newLocation.lat) / (clusterSize + 1);
-			clusterList[clusterNum].lng = (clusterList[clusterNum].lng * clusterSize + newLocation.lng) / (clusterSize + 1);
-			locationList.push_back(newLocation);
-			clusterList[clusterNum].locationList.push_back(&locationList[locationList.size() - 1]);
-			break;
+void reExecute(vector<Location> & location_list, vector<Cluster> & cluster_list, double & average, double & variance, double & place_threshold) {
+	clustering(location_list, cluster_list);
+	calClusterDistribution(cluster_list, average, variance, place_threshold);
+	calClusterLocation(cluster_list);
+	classifyCluster(cluster_list, place_threshold);
+	generateDestinationRef(location_list);
+	out << "\n-\n";
+}
+void reExecuteWithPrint(vector<Location> & location_list, vector<Cluster> & cluster_list, double & average, double & variance, double & place_threshold) {
+	clustering(location_list, cluster_list);
+	printCluster(cluster_list);
+	calClusterDistribution(cluster_list, average, variance, place_threshold);
+	calClusterLocation(cluster_list);
+	classifyCluster(cluster_list, place_threshold);
+	generateDestinationRef(location_list);
+	printDestination(cluster_list, location_list);
+	out << "\n-\n";
+}
+
+int addTestList(vector<Location> & location_list, vector<Cluster> & cluster_list, double & average, double & variance, double & place_threshold, Location predicted_location, vector<Location> test_location_list) {
+	int count_correct = 0;
+	for ( unsigned int i = 0; i < test_location_list.size() - 1; i++ ) {
+		location_list.push_back(test_location_list[i]);
+		reExecute(location_list, cluster_list, average, variance, place_threshold);
+		out << "predicted cluster: " << predicted_location.parent_cluster_id << " \t new location cluster: " << location_list[location_list.size() - 1].parent_cluster_id << "\n";
+		if ( predicted_location.parent_cluster_id == location_list[location_list.size() - 1].parent_cluster_id ) {
+			count_correct++;
 		}
+		cout << "test number " << i << "from" << test_location_list.size() << "\n";
 	}
-}
-
-void addLocationList(vector<Location> newLocationList, vector<Location> &locationList, vector<Cluster> &clusterList) {
-	for ( unsigned int i = 0; i < newLocationList.size(); i++ ) {
-
-	}
-}
-
-int addTestList(Location testLocation, vector<Location> &locationList) {
-	
-	return 0;
+	return count_correct;
 }
 
 int main() {
+	vector<Location> location_list;
+	vector<Cluster> cluster_list;
+	vector<Location> predicted_location_list;
+	Location predicted_location;
+
+	double average = 0;
+	double variance = 0;
+	double place_threshold = 0;
 
 	//fileLocation.open(FILE_NAME);
 	fileLocation.open(FILE_TRAIN);
-	/// import new user location
-	ReadFileLocation(fileLocation, locationList);
-	clustering(locationList, clusterList);
-	printCluster(clusterList);
-	calClusterDistribution(clusterList);
-	calClusterLocation(clusterList);
-	classifyCluster(clusterList);
-	generateDestinationRef(locationList);
-	printDestination(clusterList);
 
-	int predicted_location_id = predictNextLocation(locationList[locationList.size() - 1], clusterList, locationList);
-	predicted_location = Location(clusterList[predicted_location_id].lat, clusterList[predicted_location_id].lng, locationList[locationList.size() - 1].time + 1, location_id_counter++);
+	/// import new user location
+	ReadFileLocation(fileLocation, location_list);
+	reExecuteWithPrint(location_list, cluster_list, average, variance, place_threshold);
+
+
+	/// predict next location
+	int predicted_next_cluster_id = predictNextLocation(location_list[location_list.size() - 1], cluster_list, location_list);
+	predicted_location = Location(cluster_list[predicted_next_cluster_id].lat, cluster_list[predicted_next_cluster_id].lng, location_list[location_list.size() - 1].time + 1, location_id_counter++);
+	predicted_location.parent_cluster_id = predicted_next_cluster_id;
+
+
 	///// test by train
 	//int testNum = 54;
 	//int countCorrect = 0;
-	//for ( unsigned int i = 0; i < locationList.size()-1; i++ ) {
-	//	Location test = locationList[i];
-	//	int predicted_cluster_id = predictNextLocation(test, clusterList, locationList);
-	//	if ( predicted_cluster_id == locationList[i].destination_cluster_id ) {
+	//for ( unsigned int i = 0; i < location_list.size()-1; i++ ) {
+	//	Location test = location_list[i];
+	//	int predicted_cluster_id = predictNextLocation(test, cluster_list, location_list);
+	//	if ( predicted_cluster_id == location_list[i].destination_cluster_id ) {
 	//		countCorrect++;
 	//	}
 	//	//cout << "destination cluster id: " << predicted_cluster_id << "\n";
 	//}
-	//out<<"accuracy" << 1.0*countCorrect/locationList.size()<<"\n";
+	//out<<"accuracy" << 1.0*countCorrect/location_list.size()<<"\n";
 
 	/// test by increasing
 	int countCorrect = 0;
 	fileTest.open(FILE_TEST);
-	vector<Location> testLocation;
-	ReadFileLocation(fileTest, testLocation);
-	for ( unsigned int i = 0; i < testLocation.size(); i++ ) {
-		countCorrect = addTestList(testLocation[i], locationList);
-	}
-
-
+	vector<Location> test_location_list;
+	ReadFileLocation(fileTest, test_location_list);
+	countCorrect = addTestList(location_list, cluster_list, average, variance, place_threshold, predicted_location, test_location_list);
+	out << "accuracy: " << 100.0*countCorrect / test_location_list.size() << "\n";
 	out.close();
 }
