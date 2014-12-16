@@ -4,7 +4,7 @@
 Cluster::Cluster() {
 }
 Cluster::Cluster(Location *initLocation) {
-	locationList.push_back(initLocation);
+	location_list.push_back(initLocation);
 }
 
 

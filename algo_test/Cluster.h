@@ -10,7 +10,7 @@ using namespace std;
 
 class Cluster {
 public:
-	vector<Location*> locationList;
+	vector<Location*> location_list;
 	int type = UNKNOWN;
 	int cluster_id = -1;
 	double lat;

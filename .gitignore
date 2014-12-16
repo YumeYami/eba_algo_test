@@ -182,3 +182,6 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 algo_test/prediction_backup/
+algo_test/out-location-1.txt
+algo_test/out-location-2.txt
+algo_test/out-location-3.txt
