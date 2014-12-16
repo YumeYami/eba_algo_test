@@ -13,6 +13,8 @@ public:
 	vector<Location*> locationList;
 	int type = UNKNOWN;
 	int cluster_id = -1;
+	double lat;
+	double lon;
 
 	Cluster();
 	Cluster(Location *initLocation);

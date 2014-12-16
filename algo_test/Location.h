@@ -13,6 +13,7 @@ public:
 	double lon;
 	double time;
 	int id;
+	int person_id;
 	int destination_cluster_id = NO_DESTINATION;
 	int parent_cluster_id = -1;
 
