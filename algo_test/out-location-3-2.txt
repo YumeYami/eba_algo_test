@@ -1,0 +1,4 @@
+
+cannot predicted: 33/500
+cannot compare result: 35/467
+accuracy: 96.5278 ( 417/432 )
