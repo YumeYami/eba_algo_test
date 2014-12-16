@@ -21,11 +21,13 @@ using namespace std;
 
 ///
 #define PI 3.141592653589793238462643383279502884
-#define PLACE_THRESHOLD_SIZE 5 /// use instead of (average+variance)
+//#define PLACE_THRESHOLD_SIZE 5 /// use instead of (average+variance)
 #define TIME_DESTINATION_THRESHOLD 24 /// meaningless
 
-
-#define TIME_24H_DESTINATION_THRESHOLD 1.0
+/// for predicting 24h
+#define MAX_PREDICTING_TIME 24 /// from requirement
+#define PREDICTING_TIME_INTERVAL 1.0 /// form requirement
+#define TIME_24H_DESTINATION_THRESHOLD 0.5
 
 string file_num = "2";
 
@@ -147,7 +149,7 @@ void calClusterDistribution(vector<Cluster> cluster_list, double & average, doub
 	variance /= cluster_list.size();
 	//out << "average: " << average << "\tvariance: " << variance << "\n";
 	//placeThreshold = average + sqrt(variance)/2;
-	place_threshold = PLACE_THRESHOLD_SIZE;
+	//place_threshold = PLACE_THRESHOLD_SIZE;
 }
 
 void calClusterLocation(vector<Cluster> & cluster_list) {
@@ -164,28 +166,28 @@ void calClusterLocation(vector<Cluster> & cluster_list) {
 	}
 }
 
-void classifyCluster(vector<Cluster> & cluster_list, double place_threshold) {
-	for ( unsigned int i = 0; i < cluster_list.size(); i++ ) {
-		double n = cluster_list[i].location_list.size();
-		//out << "n: " << n << "\n";
-		//double fn = 1.0 * exp(-((n - average)*(n - average) / 2.0 / variance)) / sqrt(2.0 * PI * variance);
-		if ( n > place_threshold )
-			cluster_list[i].type = PLACE;
-		else
-			cluster_list[i].type = ROUTE;
-		//out << "fn " << i << ": " << fn << "\n";
-	}
-	//for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
-
-	//	if ( clusterList[i].type == PLACE ) {
-	//		out << "cluster " << i << ": ";
-	//		out << "PLACE\n";
-	//	}
-	//	else {
-	//		//out << "ROUTE\n";
-	//	}
-	//}
-}
+// void classifyCluster(vector<Cluster> & cluster_list, double place_threshold) {
+// 	for ( unsigned int i = 0; i < cluster_list.size(); i++ ) {
+// 		double n = cluster_list[i].location_list.size();
+// 		//out << "n: " << n << "\n";
+// 		//double fn = 1.0 * exp(-((n - average)*(n - average) / 2.0 / variance)) / sqrt(2.0 * PI * variance);
+// 		if ( n > place_threshold )
+// 			cluster_list[i].type = PLACE;
+// 		else
+// 			cluster_list[i].type = ROUTE;
+// 		//out << "fn " << i << ": " << fn << "\n";
+// 	}
+// 	//for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
+// 
+// 	//	if ( clusterList[i].type == PLACE ) {
+// 	//		out << "cluster " << i << ": ";
+// 	//		out << "PLACE\n";
+// 	//	}
+// 	//	else {
+// 	//		//out << "ROUTE\n";
+// 	//	}
+// 	//}
+// }
 
 void generateDestinationRef(vector<Location> & location_list) {
 	for ( unsigned int i = 0; i < location_list.size() - 1; i++ ) {
@@ -253,8 +255,8 @@ void predictNext24hLocation(Location current_location, vector<Cluster> cluster_l
 	vector<Location> newList;
 	predicted_location_list = newList;
 	int next_cluster = predictNextLocation(current_location, cluster_list, location_list);
-	int time_count = 2;
-	double time_temp = 2;
+	int time_count = PREDICTING_TIME_INTERVAL;
+	double time_temp = PREDICTING_TIME_INTERVAL;
 	while ( time_count <= 24 ) {
 		if ( next_cluster == -1 ) {
 			break;
@@ -290,7 +292,7 @@ void reExecute(vector<Location> & location_list, vector<Cluster> & cluster_list,
 	clustering(location_list, cluster_list);
 	calClusterDistribution(cluster_list, average, variance, place_threshold);
 	calClusterLocation(cluster_list);
-	classifyCluster(cluster_list, place_threshold);
+	//classifyCluster(cluster_list, place_threshold);
 	generateDestinationRef(location_list);
 	//out << "\n-\n";
 }
