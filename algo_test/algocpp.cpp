@@ -28,6 +28,7 @@ using namespace std;
 #define MAX_PREDICTING_TIME 24 /// from requirement
 #define PREDICTING_TIME_INTERVAL 1.0 /// form requirement
 #define TIME_24H_DESTINATION_THRESHOLD 0.5
+#define TIME_COMPARE_INTERVAL 1.0
 
 string file_num = "3";
 
@@ -318,9 +319,9 @@ void addTestList(vector<Location> & location_list, vector<Cluster> & cluster_lis
 		else {
 			bool comparable = false;
 			for ( unsigned int j = 0; j < predicted_location_list.size(); j++ ) {
-				if ( isClosedTime(new_input.time, predicted_location_list[j].time, TIME_24H_DESTINATION_THRESHOLD) ) {
+				if ( isClosedTime(new_input.time, predicted_location_list[j].time, TIME_COMPARE_INTERVAL) ) {
 					comparable = true;
-					if ( predicted_location.parent_cluster_id == new_input.parent_cluster_id ) {
+					if ( predicted_location_list[j].parent_cluster_id == new_input.parent_cluster_id ) {
 						comparable = true;
 						count_correct++;
 						break;
@@ -391,9 +392,7 @@ int main() {
 
 
 	/// predict next location
-	int predicted_next_cluster_id = predictNextLocation(location_list[location_list.size() - 1], cluster_list, location_list);
-	predicted_location = Location(cluster_list[predicted_next_cluster_id].lat, cluster_list[predicted_next_cluster_id].lng, location_list[location_list.size() - 1].time + 1, location_id_counter++);
-	predicted_location.parent_cluster_id = predicted_next_cluster_id;
+	predictNext24hLocation(location_list[location_list.size() - 1], cluster_list, location_list, predicted_location_list);
 
 
 	///// test by train
