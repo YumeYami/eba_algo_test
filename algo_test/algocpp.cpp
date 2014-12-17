@@ -308,8 +308,10 @@ void addTestList(vector<Location> & location_list, vector<Cluster> & cluster_lis
 	int count_correct = 0;
 	int cannot_predicted = 0;
 	int cannot_compare_result = 0;
+	int count_hourly_number = 0;
+	int count_not_match = 0;
 	for ( unsigned int i = 0; i < test_location_list.size() - 1; i++ ) {
-		std::cout << "test number " << i + 1 << "from" << test_location_list.size() << "\n";
+		std::cout << "test number " << i + 1 << " from " << test_location_list.size() << "\n";
 		location_list.push_back(test_location_list[i]);
 		reExecute(location_list, cluster_list, average, variance, place_threshold);
 		Location new_input = location_list[location_list.size() - 1];
@@ -318,6 +320,7 @@ void addTestList(vector<Location> & location_list, vector<Cluster> & cluster_lis
 			cannot_predicted++;
 		else {
 			bool comparable = false;
+			count_hourly_number += predicted_location_list.size();
 			for ( unsigned int j = 0; j < predicted_location_list.size(); j++ ) {
 				if ( isClosedTime(new_input.time, predicted_location_list[j].time, TIME_COMPARE_INTERVAL) ) {
 					comparable = true;
@@ -330,11 +333,14 @@ void addTestList(vector<Location> & location_list, vector<Cluster> & cluster_lis
 						/// not correct
 					}
 				}
+				else {
+					count_not_match++;
+				}
 			}
 			if ( !comparable ) {
 				cannot_compare_result++;
 			}
-		}	
+		}
 
 		predictNext24hLocation(new_input, cluster_list, location_list, predicted_location_list);
 		//printPredictedLocationList(predicted_location_list);
@@ -363,10 +369,13 @@ void addTestList(vector<Location> & location_list, vector<Cluster> & cluster_lis
 	}
 	location_list.push_back(test_location_list[test_location_list.size() - 1]);
 	reExecute(location_list, cluster_list, average, variance, place_threshold);
-	out << "\ncannot predicted: " << cannot_predicted << "/" << test_location_list.size() << "\n";
+	out << "not match result: " << count_not_match << "\n";
+	out << "total number of prediction result: " << count_hourly_number << "\n";
+	out << "cannot predicted: " << cannot_predicted << "/" << test_location_list.size() << "\n";
 	out << "cannot compare result: " << cannot_compare_result << "/" << test_location_list.size() - cannot_predicted << "\n";
 	int can_compare = test_location_list.size() - cannot_predicted - cannot_compare_result;
 	out << "accuracy: " << 100.0 * count_correct / can_compare << " ( " << count_correct << "/" << can_compare << " )\n";
+
 }
 
 int main() {

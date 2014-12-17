@@ -185,3 +185,7 @@ algo_test/prediction_backup/
 algo_test/out-location-1.txt
 algo_test/out-location-2.txt
 algo_test/out-location-3.txt
+algo_test/prediction_backup2/
+algo_test/out-location-3-1.txt
+algo_test/out-location-3-2.txt
+algo_test/out-location-3-3.txt
