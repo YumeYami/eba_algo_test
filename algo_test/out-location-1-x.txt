@@ -1226,4 +1226,18 @@ time: 29.5 cluster: 3
 time: 31.5 cluster: 3
 
 ---
+location_number: 96 lat-35.6631 lng-139.807 time-8.5
+time: 9.5 cluster: 3
+time: 11.5 cluster: 3
+time: 13.5 cluster: 3
+time: 15.5 cluster: 3
+time: 17.5 cluster: 3
+time: 21.5 cluster: 3
+time: 23.5 cluster: 3
+time: 25.5 cluster: 3
+time: 27.5 cluster: 3
+time: 29.5 cluster: 3
+time: 31.5 cluster: 3
+
+---
 accuracy0

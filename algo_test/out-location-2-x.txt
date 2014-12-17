@@ -4491,4 +4491,19 @@ time: 34.2167 cluster: 0
 time: 36.2167 cluster: 0
 
 ---
+location_number: 319 lat-35.653 lng-140.039 time-13.2167
+time: 14.2167 cluster: 0
+time: 16.2167 cluster: 0
+time: 18.2167 cluster: 0
+time: 20.2167 cluster: 0
+time: 22.2167 cluster: 0
+time: 24.2167 cluster: 0
+time: 26.2167 cluster: 0
+time: 28.2167 cluster: 0
+time: 30.2167 cluster: 0
+time: 32.2167 cluster: 0
+time: 34.2167 cluster: 0
+time: 36.2167 cluster: 0
+
+---
 accuracy0

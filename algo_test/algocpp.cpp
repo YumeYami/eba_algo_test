@@ -30,7 +30,7 @@ using namespace std;
 #define TIME_24H_DESTINATION_THRESHOLD 0.5
 #define TIME_COMPARE_INTERVAL 1.0
 
-string file_num = "1";
+string file_num = "2";
 string FILE_NAME = "location-" + file_num + ".txt";
 string FILE_TRAIN = "location-" + file_num + "-train.txt";
 string FILE_TEST = "location-" + file_num + "-test.txt";
@@ -405,7 +405,7 @@ int main() {
 	/// test by training data set
 	int testNum = 0;
 	int countCorrect = 0;
-	for ( unsigned int i = 0; i < location_list.size() - 1; i++ ) {
+	for ( unsigned int i = 0; i < location_list.size(); i++ ) {
 		Location test = location_list[i];
 		predictNext24hLocation(location_list[i], cluster_list, location_list, predicted_location_list);
 		out << "location_number: " << i << " lat-" << location_list[i].lat << " lng-" << location_list[i].lng << " time-" << location_list[i].time << "\n";
