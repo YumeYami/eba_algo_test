@@ -21,8 +21,7 @@ using namespace std;
 
 ///
 #define PI 3.141592653589793238462643383279502884
-//#define PLACE_THRESHOLD_SIZE 5 /// use instead of (average+variance)
-#define TIME_DESTINATION_THRESHOLD 24 /// meaningless
+#define TIME_DESTINATION_THRESHOLD 24
 
 /// for predicting 24h
 #define MAX_PREDICTING_TIME 24 /// from requirement
@@ -30,11 +29,12 @@ using namespace std;
 #define TIME_24H_DESTINATION_THRESHOLD 0.5
 #define TIME_COMPARE_INTERVAL 1.0
 
+/// file "1", "2", "3", "3-1", "3-2", "3-3"
 string file_num = "2";
 string FILE_NAME = "location-" + file_num + ".txt";
 string FILE_TRAIN = "location-" + file_num + "-train.txt";
 string FILE_TEST = "location-" + file_num + "-test.txt";
-string OUTPUT_FILE_NAME = "out-location-" + file_num + "-x.txt";
+string OUTPUT_FILE_NAME = "out-location-" + file_num + ".txt";
 
 int location_id_counter = 0;
 int cluster_id_counter = 0;
@@ -122,36 +122,16 @@ void clustering(vector<Location> & location_list, vector<Cluster> & cluster_list
 	cluster_list = new_cluster_list;
 }
 
-/// for debugging 
-void printCluster(vector<Cluster> cluster_list) {
-	out << "number of cluster: " << cluster_list.size() << "\n";
-	for ( unsigned int i = 0; i < cluster_list.size(); i++ ) {
-		out << "cluster" << i << ": " << cluster_list[i].location_list.size() << "- ";
-		for ( unsigned int j = 0; j < cluster_list[i].location_list.size(); j++ ) {
-			out << (*cluster_list[i].location_list[j]).id << " ";
-		}
-		out << "\n";
-	}
-}
-
-void calClusterDistribution(vector<Cluster> cluster_list, double & average, double & variance, double & place_threshold) {
-	average = 0;
-	for ( unsigned int i = 0; i < cluster_list.size(); i++ ) {
-		average += cluster_list[i].location_list.size();
-	}
-	average /= cluster_list.size();
-
-	variance = 0;
-	for ( unsigned int i = 0; i < cluster_list.size(); i++ ) {
-		int diff = cluster_list[i].location_list.size() - average;
-		variance += diff*diff;
-	}
-	variance /= cluster_list.size();
-	variance /= cluster_list.size();
-	//out << "average: " << average << "\tvariance: " << variance << "\n";
-	//placeThreshold = average + sqrt(variance)/2;
-	//place_threshold = PLACE_THRESHOLD_SIZE;
-}
+//void printCluster(vector<Cluster> cluster_list) {
+//	out << "number of cluster: " << cluster_list.size() << "\n";
+//	for ( unsigned int i = 0; i < cluster_list.size(); i++ ) {
+//		out << "cluster" << i << ": " << cluster_list[i].location_list.size() << "- ";
+//		for ( unsigned int j = 0; j < cluster_list[i].location_list.size(); j++ ) {
+//			out << (*cluster_list[i].location_list[j]).id << " ";
+//		}
+//		out << "\n";
+//	}
+//}
 
 void calClusterLocation(vector<Cluster> & cluster_list) {
 	for ( unsigned int i = 0; i < cluster_list.size(); i++ ) {
@@ -167,29 +147,6 @@ void calClusterLocation(vector<Cluster> & cluster_list) {
 	}
 }
 
-// void classifyCluster(vector<Cluster> & cluster_list, double place_threshold) {
-// 	for ( unsigned int i = 0; i < cluster_list.size(); i++ ) {
-// 		double n = cluster_list[i].location_list.size();
-// 		//out << "n: " << n << "\n";
-// 		//double fn = 1.0 * exp(-((n - average)*(n - average) / 2.0 / variance)) / sqrt(2.0 * PI * variance);
-// 		if ( n > place_threshold )
-// 			cluster_list[i].type = PLACE;
-// 		else
-// 			cluster_list[i].type = ROUTE;
-// 		//out << "fn " << i << ": " << fn << "\n";
-// 	}
-// 	//for ( unsigned int i = 0; i < clusterList.size(); i++ ) {
-// 
-// 	//	if ( clusterList[i].type == PLACE ) {
-// 	//		out << "cluster " << i << ": ";
-// 	//		out << "PLACE\n";
-// 	//	}
-// 	//	else {
-// 	//		//out << "ROUTE\n";
-// 	//	}
-// 	//}
-// }
-
 void generateDestinationRef(vector<Location> & location_list) {
 	for ( unsigned int i = 0; i < location_list.size() - 1; i++ ) {
 		if ( abs(location_list[i].time - location_list[i + 1].time) <= TIME_DESTINATION_THRESHOLD )
@@ -197,7 +154,6 @@ void generateDestinationRef(vector<Location> & location_list) {
 	}
 }
 
-///// for debugging 
 // void printDestination(vector<Cluster> cluster_list, vector<Location> location_list) {
 // 	for ( unsigned int i = 0; i < location_list.size(); i++ ) {
 // 		if ( location_list[i].parent_cluster_id != location_list[i].destination_cluster_id )
@@ -219,6 +175,13 @@ double calDestinationScore(Location current_location, Location location) {
 	}
 	score = 1.0 / pow(2 * PI, 1.5) / sqrt(VARIANCE_LAT + VARIANCE_LNG + VARIANCE_TIME) * exp(-1.0 / 2 * ((diff_lat*diff_lat*VARIANCE_LAT) + (diff_lng*diff_lng*VARIANCE_LNG) + (diff_time*diff_time*VARIANCE_TIME)));
 	return score;
+}
+
+bool isClosedTime(double time1, double time2, double time_threshold) {
+	double diff = abs(time1 - time2);
+	if ( diff >= 12 )
+		diff = 24 - diff;
+	return diff <= time_threshold;
 }
 
 int predictNextLocation(Location current_location, vector<Cluster> cluster_list, vector<Location> location_list) {
@@ -245,13 +208,6 @@ int predictNextLocation(Location current_location, vector<Cluster> cluster_list,
 	return clusterID;
 }
 
-bool isClosedTime(double time1, double time2, double time_threshold) {
-	double diff = abs(time1 - time2);
-	if ( diff >= 12 )
-		diff = 24 - diff;
-	return diff <= time_threshold;
-}
-/// my stupid algorithm (=_=)
 void predictNext24hLocation(Location current_location, vector<Cluster> cluster_list, vector<Location> location_list, vector<Location> & predicted_location_list) {
 	vector<Location> newList;
 	predicted_location_list = newList;
@@ -289,32 +245,30 @@ void predictNext24hLocation(Location current_location, vector<Cluster> cluster_l
 }
 
 ///-------------------- add new location and evaluating the accuracy part
-void reExecute(vector<Location> & location_list, vector<Cluster> & cluster_list, double & average, double & variance, double & place_threshold) {
+void reExecute(vector<Location> & location_list, vector<Cluster> & cluster_list) {
 	clustering(location_list, cluster_list);
-	calClusterDistribution(cluster_list, average, variance, place_threshold);
 	calClusterLocation(cluster_list);
-	printCluster(cluster_list);
-	//classifyCluster(cluster_list, place_threshold);
+	//printCluster(cluster_list);
 	generateDestinationRef(location_list);
 	//out << "\n-\n";
 }
 
-void printPredictedLocationList(vector<Location> predicted_location_list) {
-	for ( unsigned int i = 0; i < predicted_location_list.size(); i++ ) {
-		out << "time: " << predicted_location_list[i].time << " cluster: " << predicted_location_list[i].parent_cluster_id << "\n";
-	}
-	out << "\n---\n";
-}
-void addTestList(vector<Location> & location_list, vector<Cluster> & cluster_list, double & average, double & variance, double & place_threshold, Location & predicted_location, vector<Location> test_location_list, vector<Location> & predicted_location_list) {
+//void printPredictedLocationList(vector<Location> predicted_location_list) {
+//	for ( unsigned int i = 0; i < predicted_location_list.size(); i++ ) {
+//		out << "time: " << predicted_location_list[i].time << " cluster: " << predicted_location_list[i].parent_cluster_id << "\n";
+//	}
+//	out << "\n---\n";
+//}
+
+void addTestList(vector<Location> & location_list, vector<Cluster> & cluster_list, vector<Location> input_location_list, vector<Location> & predicted_location_list) {
 	int count_correct = 0;
 	int cannot_predicted = 0;
 	int cannot_compare_result = 0;
 	int count_hourly_number = 0;
-	int count_not_match = 0;
-	for ( unsigned int i = 0; i < test_location_list.size() - 1; i++ ) {
-		std::cout << "test number " << i + 1 << " from " << test_location_list.size() << "\n";
-		location_list.push_back(test_location_list[i]);
-		reExecute(location_list, cluster_list, average, variance, place_threshold);
+	for ( unsigned int i = 0; i < input_location_list.size(); i++ ) {
+		std::cout << "test number " << i + 1 << " from " << input_location_list.size() << "\n";
+		location_list.push_back(input_location_list[i]);
+		reExecute(location_list, cluster_list);
 		Location new_input = location_list[location_list.size() - 1];
 		/// predict 24h next location
 		if ( predicted_location_list.size() == 0 )
@@ -335,7 +289,7 @@ void addTestList(vector<Location> & location_list, vector<Cluster> & cluster_lis
 					}
 				}
 				else {
-					count_not_match++;
+					/// not match time, continue to next predicted location
 				}
 			}
 			if ( !comparable ) {
@@ -345,38 +299,17 @@ void addTestList(vector<Location> & location_list, vector<Cluster> & cluster_lis
 
 		predictNext24hLocation(new_input, cluster_list, location_list, predicted_location_list);
 		//printPredictedLocationList(predicted_location_list);
-
-
-
-		/// predict one next location
-		/*
-		//out << "predicted cluster: " << predicted_location.parent_cluster_id << " \t new location cluster: " << new_input.parent_cluster_id << "\n";
-		if ( predicted_location.parent_cluster_id == new_input.parent_cluster_id ) {
-		count_correct++;
-		}
-		else if ( predicted_location.parent_cluster_id == -1 ) {
-		cannot_predicted++;
-		}
-		/// predict one next location
-		int predicted_next_cluster_id = predictNextLocation(new_input, cluster_list, location_list);
-		if ( predicted_next_cluster_id == -1 )
-		predicted_location = Location(0, 0, 0, -1);
-		else
-		predicted_location = Location(cluster_list[predicted_next_cluster_id].lat, cluster_list[predicted_next_cluster_id].lng, new_input.time + 2, location_id_counter++);
-
-		predicted_location.parent_cluster_id = predicted_next_cluster_id;
-
-		/**/
 	}
-	location_list.push_back(test_location_list[test_location_list.size() - 1]);
-	reExecute(location_list, cluster_list, average, variance, place_threshold);
-	out << "not match result: " << count_not_match << "\n";
-	out << "total number of prediction result: " << count_hourly_number << "\n";
-	out << "cannot predicted: " << cannot_predicted << "/" << test_location_list.size() << "\n";
-	out << "cannot compare result: " << cannot_compare_result << "/" << test_location_list.size() - cannot_predicted << "\n";
-	int can_compare = test_location_list.size() - cannot_predicted - cannot_compare_result;
-	out << "accuracy: " << 100.0 * count_correct / can_compare << " ( " << count_correct << "/" << can_compare << " )\n";
 
+	/// print result to out file
+	//out << "total number of prediction result: " << count_hourly_number << "\n";
+	int can_predict = input_location_list.size() - cannot_predicted;
+	int can_compare = can_predict - cannot_compare_result;
+	out << "cannot predict location: " << cannot_predicted << "/" << input_location_list.size() << "\n";
+	out << "cannot compared result: " << cannot_compare_result << "/" << can_predict << "\n";
+
+	out << "accuracy: " << 100.0 * count_correct / can_compare << " ( " << count_correct << "/" << can_compare << " compare with comparable result )\n";
+	out << "accuracy: " << 100.0 * count_correct / can_predict << " ( " << count_correct << "/" << can_predict << " compare with predictable result )\n";
 }
 
 int main() {
@@ -385,16 +318,12 @@ int main() {
 	vector<Location> predicted_location_list;
 	Location predicted_location;
 
-	double average = 0;
-	double variance = 0;
-	double place_threshold = 0;
-
-	//fileLocation.open(FILE_TRAIN);
-	fileLocation.open(FILE_NAME);
+	fileLocation.open(FILE_TRAIN);
+	//fileLocation.open(FILE_NAME);
 
 	/// import new user location
 	ReadFileLocation(fileLocation, location_list);
-	reExecute(location_list, cluster_list, average, variance, place_threshold);
+	reExecute(location_list, cluster_list);
 	//printCluster(cluster_list);
 
 
@@ -402,23 +331,23 @@ int main() {
 	predictNext24hLocation(location_list[location_list.size() - 1], cluster_list, location_list, predicted_location_list);
 
 
-	/// test by training data set
-	int testNum = 0;
-	int countCorrect = 0;
-	for ( unsigned int i = 0; i < location_list.size(); i++ ) {
-		Location test = location_list[i];
-		predictNext24hLocation(location_list[i], cluster_list, location_list, predicted_location_list);
-		out << "location_number: " << i << " lat-" << location_list[i].lat << " lng-" << location_list[i].lng << " time-" << location_list[i].time << "\n";
-		printPredictedLocationList(predicted_location_list);
-		//cout << "destination cluster id: " << predicted_cluster_id << "\n";
-	}
-	out << "accuracy" << 1.0*countCorrect / location_list.size() << "\n";
+	///// test by training data set
+	//int testNum = 0;
+	//int countCorrect = 0;
+	//for ( unsigned int i = 0; i < location_list.size(); i++ ) {
+	//	Location test = location_list[i];
+	//	predictNext24hLocation(location_list[i], cluster_list, location_list, predicted_location_list);
+	//	out << "location_number: " << i << " lat-" << location_list[i].lat << " lng-" << location_list[i].lng << " time-" << location_list[i].time << "\n";
+	//	printPredictedLocationList(predicted_location_list);
+	//	//cout << "destination cluster id: " << predicted_cluster_id << "\n";
+	//}
+	//out << "accuracy" << 1.0*countCorrect / location_list.size() << "\n";
 
-	///// test by increasing
-	//file_test.open(FILE_TEST);
-	//vector<Location> test_location_list;
-	//ReadFileLocation(file_test, test_location_list);
-	//addTestList(location_list, cluster_list, average, variance, place_threshold, predicted_location, test_location_list, predicted_location_list);
+	/// test by increasing
+	file_test.open(FILE_TEST);
+	vector<Location> test_location_list;
+	ReadFileLocation(file_test, test_location_list);
+	addTestList(location_list, cluster_list, test_location_list, predicted_location_list);
 
 	out.close();
 }

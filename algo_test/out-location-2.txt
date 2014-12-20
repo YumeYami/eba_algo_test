@@ -1,0 +1,4 @@
+cannot predict location: 22/160
+cannot compared result: 25/138
+accuracy: 94.6903 ( 107/113 compare with comparable result )
+accuracy: 77.5362 ( 107/138 compare with predictable result )

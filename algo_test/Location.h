@@ -7,8 +7,7 @@ using namespace std;
 
 class Location {
 public:
-
-
+	
 	double lat;
 	double lng;
 	double time;
